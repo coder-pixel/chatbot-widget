@@ -1,0 +1,14 @@
+{
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "/dist/$1"
+        }
+    ],
+    "builds": [
+        {
+            "src": "vite.config.ts",
+            "use": "@vercel/static-build"
+        }
+    ]
+}

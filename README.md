@@ -1,50 +1,85 @@
-# React + TypeScript + Vite
+# 🧩 Embeddable React Widget
+This project lets you build a fully **embeddable React widget** that can be used in **any website or application** using just a `<script>` tag—no React setup required on the consumer's end.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🚀 Why?
 
-Currently, two official plugins are available:
+React is amazing for building UI components—but it's not built to be embedded across different non-React platforms out of the box. This project bridges that gap by:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Wrapping a React component inside a **Web Component**
+- Using **Shadow DOM** for style isolation
+- Exporting the component as a **standalone script**
+- Hosting it on a **CDN (e.g., Vercel)** for easy integration
 
-## Expanding the ESLint configuration
+## ✨ Features
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- ⚡ Built using **Vite + TypeScript**
+- 🧼 Shadow DOM encapsulation for scoped styles
+- 🎛️ Accepts customizable props like `clientKey`, `theme`, `name`, etc.
+- 🧱 Easy integration: just drop a `<script>` and `<my-widget />` tag
+- 🌍 Can be embedded anywhere (plain HTML, PHP, WordPress, etc.)
 
-- Configure the top-level `parserOptions` property like this:
+## 📁 Folder Structure
+- src/ components/ → Widget UI and logic
+- styles/ → Sass styles for the widget
+- lib/ → Contexts, helpers, etc.
+- web-component.tsx → Converts React widget into Web Component
+- index.tsx → Defines and exports the Web Component
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
+
+## ⚙️ Vite Config for Build
+
+Make sure your `vite.config.ts` includes the following:
+
+```ts
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [react()],
+  build: {
+     lib: {
+      entry: "./src/index.tsx",
+      name: "ChatWidget",
+      fileName: (format) => `chat-widget.${format}.js`,
+      formats: ["es", "umd"], // ensure add umd format for embedding in html
     },
   },
-})
-```
+ target: "esnext",
+});
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## 🧱 Web Component Setup
+- Inside web-component.tsx, you'll define:
+- A class extending HTMLElement
+- Lifecycle method connectedCallback() to mount the React component
+- getPropsFromAttributes and normalizeAttribute helpers
+- Import and inject styles directly into the Shadow DOM
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## 🌐 Deploying on Vercel
+Create a vercel.json to serve the widget JS file from your CDN:
+
+```ts
+{
+  "builds": [
+    {
+      "src": "dist/my-widget.js",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/my-widget.js",
+      "dest": "dist/my-widget.js"
+    }
+  ]
+}
+
+
+## 🔗 Usage Example
+After deployment, you can embed the widget like this:
+
+```ts
+<script src="https://your-cdn.com/my-widget.js"></script>
+<my-widget clientkey="abc123" theme="dark"></my-widget>
+
+This works in plain HTML, React, Angular, WordPress, etc.

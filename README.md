@@ -74,7 +74,7 @@ Create a vercel.json to serve the widget JS file from your CDN:
     }
   ]
 }
-
+```
 
 ## 🔗 Usage Example
 After deployment, you can embed the widget like this:
@@ -82,5 +82,6 @@ After deployment, you can embed the widget like this:
 ```ts
 <script src="https://your-cdn.com/my-widget.js"></script>
 <my-widget clientkey="abc123" theme="dark"></my-widget>
+```
 
 This works in plain HTML, React, Angular, WordPress, etc.

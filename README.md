@@ -46,6 +46,7 @@ export default defineConfig({
   },
  target: "esnext",
 });
+```
 
 
 ## 🧱 Web Component Setup
